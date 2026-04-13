@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Ad-Free Downloader",
+    "slug": "ad-free-downloader",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.adfreedownloader",
+      "infoPlist": {
+        "NSPhotoLibraryAddUsageDescription": "ダウンロードしたファイルを写真に保存するために使用します。"
+      }
+    },
+    "android": {
+      "package": "com.example.adfreedownloader",
+      "permissions": [
+        "INTERNET",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      "expo-media-library"
+    ]
+  }
+}

@@ -64,6 +64,18 @@ class SettingsActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.notifications), Toast.LENGTH_SHORT).show()
         }
 
+        // ---- NGワード ----
+        findViewById<LinearLayout>(R.id.rowNgWords).setOnClickListener {
+            startActivity(Intent(this, NgFilterActivity::class.java)
+                .putExtra(NgFilterActivity.EXTRA_TYPE, NgFilterActivity.TYPE_WORDS))
+        }
+
+        // ---- NGサイト ----
+        findViewById<LinearLayout>(R.id.rowNgSites).setOnClickListener {
+            startActivity(Intent(this, NgFilterActivity::class.java)
+                .putExtra(NgFilterActivity.EXTRA_TYPE, NgFilterActivity.TYPE_SITES))
+        }
+
         // ---- データ消去 ----
         findViewById<LinearLayout>(R.id.rowClearData).setOnClickListener {
             showClearDataDialog()

@@ -73,6 +73,18 @@
     <!-- ダウンロード -->
     <string name="downloading">ダウンロードを開始しました</string>
 
+    <!-- NGフィルター -->
+    <string name="ng_filter">NGフィルター</string>
+    <string name="ng_words">NGワード</string>
+    <string name="ng_sites">NGサイト</string>
+    <string name="ng_words_desc">このキーワードを含む検索をブロックします</string>
+    <string name="ng_sites_desc">このサイトをアプリ内で表示しません（検索結果には表示されます）</string>
+    <string name="ng_empty">登録なし</string>
+    <string name="add_ng_word">NGワードを追加</string>
+    <string name="add_ng_site">NGサイトを追加</string>
+    <string name="ng_word_hint">例: ギャンブル</string>
+    <string name="ng_site_hint">例: example.com</string>
+
     <!-- ダイアログ -->
     <string name="ok">OK</string>
     <string name="cancel">キャンセル</string>

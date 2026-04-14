@@ -11,6 +11,8 @@ object PrefsManager {
     private const val KEY_DARK_MODE        = "dark_mode"
     private const val KEY_SEARCH_ENGINE    = "search_engine"
     private const val KEY_USER_NAME        = "user_name"
+    private const val KEY_NG_WORDS         = "ng_words"
+    private const val KEY_NG_SITES         = "ng_sites"
 
     private fun prefs(ctx: Context): SharedPreferences =
         ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -51,6 +53,30 @@ object PrefsManager {
             "DuckDuckGo" -> "https://duckduckgo.com/?q=$encoded"
             else    -> "https://www.google.com/search?q=$encoded"
         }
+    }
+
+    // ---- NGワード ----
+    fun getNgWords(ctx: Context): MutableSet<String> =
+        prefs(ctx).getStringSet(KEY_NG_WORDS, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+
+    fun setNgWords(ctx: Context, words: Set<String>) =
+        prefs(ctx).edit().putStringSet(KEY_NG_WORDS, words).apply()
+
+    fun matchNgWord(ctx: Context, query: String): String? {
+        val lower = query.lowercase()
+        return getNgWords(ctx).firstOrNull { lower.contains(it.lowercase()) }
+    }
+
+    // ---- NGサイト ----
+    fun getNgSites(ctx: Context): MutableSet<String> =
+        prefs(ctx).getStringSet(KEY_NG_SITES, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+
+    fun setNgSites(ctx: Context, sites: Set<String>) =
+        prefs(ctx).edit().putStringSet(KEY_NG_SITES, sites).apply()
+
+    fun matchNgSite(ctx: Context, url: String): String? {
+        val lower = url.lowercase()
+        return getNgSites(ctx).firstOrNull { lower.contains(it.lowercase()) }
     }
 
     // ---- ユーザー名 ----

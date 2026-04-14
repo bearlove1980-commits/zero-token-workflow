@@ -83,6 +83,25 @@ class BrowserActivity : AppCompatActivity() {
         }
 
         webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                val url = request?.url?.toString() ?: return false
+                val blocked = PrefsManager.matchNgSite(this@BrowserActivity, url)
+                if (blocked != null) {
+                    view?.loadData(
+                        "<html><body style='font-family:sans-serif;text-align:center;padding:60px;'>" +
+                        "<h2>&#x1F6AB; アクセスブロック</h2>" +
+                        "<p>NGサイト設定によりブロックされました</p>" +
+                        "<p style='color:#999;font-size:13px;'>$blocked</p></body></html>",
+                        "text/html", "utf-8"
+                    )
+                    return true
+                }
+                return false
+            }
+
             override fun shouldInterceptRequest(
                 view: WebView?,
                 request: WebResourceRequest?
@@ -138,6 +157,23 @@ class BrowserActivity : AppCompatActivity() {
             if (go) {
                 val input = urlBar.text.toString().trim()
                 if (input.isNotEmpty()) {
+                    val isUrl = input.startsWith("http://") || input.startsWith("https://") ||
+                                (input.contains(".") && !input.contains(" "))
+                    if (isUrl) {
+                        val ngSite = PrefsManager.matchNgSite(this, input)
+                        if (ngSite != null) {
+                            Toast.makeText(this, "NGサイト: $ngSite", Toast.LENGTH_SHORT).show()
+                            hideKeyboard()
+                            return@setOnEditorActionListener true
+                        }
+                    } else {
+                        val ngWord = PrefsManager.matchNgWord(this, input)
+                        if (ngWord != null) {
+                            Toast.makeText(this, "NGワード: $ngWord", Toast.LENGTH_SHORT).show()
+                            hideKeyboard()
+                            return@setOnEditorActionListener true
+                        }
+                    }
                     webView.loadUrl(resolveUrl(input))
                     hideKeyboard()
                 }

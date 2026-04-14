@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/circle_logo_bg"/>
+    <foreground>
+        <inset android:insetBottom="16dp" android:insetLeft="16dp"
+            android:insetRight="16dp" android:insetTop="16dp">
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="P"
+                android:textColor="@android:color/white"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+        </inset>
+    </foreground>
+</adaptive-icon>

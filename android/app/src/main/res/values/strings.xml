@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 日本語リソース（デフォルト） -->
+<resources>
+    <string name="app_name">Phoenix ブラウザ</string>
+
+    <!-- ナビゲーション -->
+    <string name="home">ホーム</string>
+    <string name="explore">探す</string>
+    <string name="files">ファイル</string>
+    <string name="tabs">タブ</string>
+    <string name="me">マイページ</string>
+
+    <!-- 検索バー -->
+    <string name="search_hint">検索またはURLを入力</string>
+
+    <!-- ブラウザ操作 -->
+    <string name="back">戻る</string>
+    <string name="forward">進む</string>
+    <string name="reload">再読み込み</string>
+    <string name="menu">メニュー</string>
+    <string name="stop">停止</string>
+
+    <!-- 画像読み込み（メイン新機能）-->
+    <string name="load_images">画像を読み込む</string>
+    <string name="load_images_desc">オフにするとページの読み込みが速くなります</string>
+    <string name="images_on">画像: オン</string>
+    <string name="images_off">画像: オフ（通信節約）</string>
+
+    <!-- マイページ -->
+    <string name="bookmarks">ブックマーク</string>
+    <string name="history">履歴</string>
+    <string name="following">フォロー中</string>
+    <string name="dark_mode">ダークモード</string>
+    <string name="dark_mode_on">ダークモードをオンにしました</string>
+    <string name="dark_mode_off">ダークモードをオフにしました</string>
+    <string name="settings">設定</string>
+    <string name="follow_on_facebook">Facebookでフォロー</string>
+    <string name="upload_content">Phoenix にコンテンツを投稿</string>
+    <string name="share_phoenix">Phoenix を共有</string>
+    <string name="share_phoenix_text">Phoenix ブラウザを使ってみて！高速で使いやすいAndroidブラウザです。</string>
+    <string name="help_feedback">ヘルプ＆フィードバック</string>
+
+    <!-- 設定画面 -->
+    <string name="section_display">表示設定</string>
+    <string name="section_general">一般</string>
+    <string name="section_privacy">プライバシー</string>
+    <string name="section_other">その他</string>
+
+    <string name="javascript">JavaScript</string>
+    <string name="search_engine">検索エンジン</string>
+    <string name="font_size">文字サイズ</string>
+    <string name="language">言語</string>
+    <string name="downloads">ダウンロード</string>
+    <string name="notifications">通知</string>
+    <string name="clear_data">データを消去</string>
+    <string name="clear_data_confirm">閲覧履歴・Cookie・キャッシュを削除しますか？</string>
+    <string name="data_cleared">データを消去しました</string>
+    <string name="set_as_default_browser">デフォルトブラウザに設定</string>
+    <string name="about_phoenix">Phoenixについて</string>
+    <string name="feedback">フィードバック</string>
+    <string name="rate_us">評価する</string>
+    <string name="reset_settings">デフォルト設定にリセット</string>
+    <string name="reset_confirm">すべての設定をリセットしますか？</string>
+    <string name="settings_reset">設定をリセットしました</string>
+
+    <!-- ブラウザメニューシート -->
+    <string name="add_bookmark">ブックマーク追加</string>
+    <string name="speed_dial">スピードダイアル</string>
+    <string name="add_to_home">ホームに追加</string>
+    <string name="share">共有</string>
+    <string name="videos">動画</string>
+
+    <!-- ダウンロード -->
+    <string name="downloading">ダウンロードを開始しました</string>
+
+    <!-- ダイアログ -->
+    <string name="ok">OK</string>
+    <string name="cancel">キャンセル</string>
+</resources>

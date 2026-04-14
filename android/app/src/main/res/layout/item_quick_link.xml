@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="8dp">
+
+    <View
+        android:id="@+id/quickLinkCircle"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:background="@drawable/circle_bg" />
+
+    <!-- イニシャルテキストをCircleの上に重ねる -->
+    <FrameLayout
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="-52dp">
+
+        <View
+            android:id="@+id/quickLinkCircle2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle_bg" />
+
+        <TextView
+            android:id="@+id/quickLinkInitial"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Y"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:gravity="center" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/quickLinkTitle"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Yahoo"
+        android:textSize="10sp"
+        android:textColor="@color/text_primary"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+</LinearLayout>

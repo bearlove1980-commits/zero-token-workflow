@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- プロフィールヘッダー -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@color/surface"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:text="啓介"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:background="@drawable/avatar_bg" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hi"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary" />
+
+                    <TextView
+                        android:id="@+id/tvUserName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="長岡啓介"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_secondary" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="8dp"
+                android:background="@color/divider_heavy" />
+
+            <!-- グループ1: ブックマーク〜ダークモード -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/surface">
+
+                <!-- ブックマーク -->
+                <LinearLayout android:id="@+id/menuBookmarks"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                        android:src="@drawable/ic_bookmark" android:layout_marginEnd="16dp" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/bookmarks"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="60dp" />
+
+                <!-- 履歴 -->
+                <LinearLayout android:id="@+id/menuHistory"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                        android:src="@drawable/ic_history" android:layout_marginEnd="16dp" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/history"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="60dp" />
+
+                <!-- フォロー中 -->
+                <LinearLayout android:id="@+id/menuFollowing"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                        android:src="@drawable/ic_me" android:layout_marginEnd="16dp" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/following"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="60dp" />
+
+                <!-- ダークモード（スイッチ付き）-->
+                <LinearLayout
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                        android:src="@drawable/ic_dark_mode" android:layout_marginEnd="16dp" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/dark_mode"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <Switch android:id="@+id/switchDarkMode"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="8dp"
+                android:background="@color/divider_heavy" />
+
+            <!-- グループ2: 設定 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/surface">
+
+                <LinearLayout android:id="@+id/menuSettings"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                        android:src="@drawable/ic_settings_gear" android:layout_marginEnd="16dp" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/settings"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="8dp"
+                android:background="@color/divider_heavy" />
+
+            <!-- グループ3: SNS・共有・ヘルプ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/surface">
+
+                <!-- Facebook -->
+                <LinearLayout android:id="@+id/menuFacebook"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                        android:src="@drawable/ic_explore" android:layout_marginEnd="16dp" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/follow_on_facebook"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="60dp" />
+
+                <!-- アップロード -->
+                <LinearLayout android:id="@+id/menuUpload"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                        android:src="@drawable/ic_files" android:layout_marginEnd="16dp" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/upload_content"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="60dp" />
+
+                <!-- 共有 -->
+                <LinearLayout android:id="@+id/menuShare"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                        android:src="@drawable/ic_share" android:layout_marginEnd="16dp" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/share_phoenix"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="60dp" />
+
+                <!-- ヘルプ -->
+                <LinearLayout android:id="@+id/menuHelp"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                        android:src="@drawable/ic_feedback" android:layout_marginEnd="16dp" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/help_feedback"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ボトムナビ -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        app:menu="@menu/bottom_nav_menu"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/bottom_nav_icon_color"
+        app:itemTextColor="@color/bottom_nav_icon_color" />
+
+</LinearLayout>

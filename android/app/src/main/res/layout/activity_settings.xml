@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <!-- ツールバー -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/surface"
+        android:paddingHorizontal="8dp"
+        android:elevation="2dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            android:scaleType="centerInside"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/settings"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:gravity="center" />
+
+        <View android:layout_width="40dp" android:layout_height="40dp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ===== 画像読み込み（メイン新機能）===== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/section_display"
+                android:textSize="12sp"
+                android:textColor="@color/accent"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/surface">
+
+                <!-- 画像読み込みスイッチ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/load_images"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/load_images_desc"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/switchImages"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="20dp" />
+
+                <!-- JavaScript スイッチ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/javascript"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_primary" />
+
+                    <Switch
+                        android:id="@+id/switchJs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="20dp" />
+
+                <!-- ダークモードスイッチ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/dark_mode"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_primary" />
+
+                    <Switch
+                        android:id="@+id/switchDarkMode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ===== 一般 ===== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/section_general"
+                android:textSize="12sp"
+                android:textColor="@color/accent"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/surface">
+
+                <!-- 検索エンジン -->
+                <LinearLayout
+                    android:id="@+id/rowSearchEngine"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/search_engine"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_primary" />
+
+                    <TextView
+                        android:id="@+id/tvSearchEngineValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Google"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginEnd="4dp" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right"
+                        android:tint="@color/text_hint" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="20dp" />
+
+                <!-- フォントサイズ -->
+                <LinearLayout
+                    android:id="@+id/rowFontSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/font_size"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_primary" />
+
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" android:tint="@color/text_hint" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="20dp" />
+
+                <!-- 言語 -->
+                <LinearLayout
+                    android:id="@+id/rowLanguage"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/language"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_primary" />
+
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" android:tint="@color/text_hint" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ===== プライバシー ===== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/section_privacy"
+                android:textSize="12sp"
+                android:textColor="@color/accent"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/surface">
+
+                <!-- ダウンロード -->
+                <LinearLayout
+                    android:id="@+id/rowDownloads"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/downloads"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" android:tint="@color/text_hint" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="20dp" />
+
+                <!-- 通知 -->
+                <LinearLayout
+                    android:id="@+id/rowNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/notifications"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" android:tint="@color/text_hint" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="20dp" />
+
+                <!-- データ消去 -->
+                <LinearLayout
+                    android:id="@+id/rowClearData"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp"
+                    android:background="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/clear_data"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" android:tint="@color/text_hint" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ===== その他 ===== -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/section_other"
+                android:textSize="12sp"
+                android:textColor="@color/accent"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/surface">
+
+                <!-- デフォルトブラウザ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp">
+
+                    <TextView
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/set_as_default_browser"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+
+                    <Switch
+                        android:id="@+id/switchDefaultBrowser"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="20dp" />
+
+                <!-- Phoenixについて -->
+                <LinearLayout
+                    android:id="@+id/rowAbout"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/about_phoenix"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" android:tint="@color/text_hint" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="20dp" />
+
+                <!-- フィードバック -->
+                <LinearLayout
+                    android:id="@+id/rowFeedback"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/feedback"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" android:tint="@color/text_hint" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="20dp" />
+
+                <!-- レーティング -->
+                <LinearLayout
+                    android:id="@+id/rowRate"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/rate_us"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" android:tint="@color/text_hint" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/divider" android:layout_marginStart="20dp" />
+
+                <!-- リセット -->
+                <LinearLayout
+                    android:id="@+id/rowReset"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:paddingHorizontal="20dp" android:background="?attr/selectableItemBackground">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="@string/reset_settings"
+                        android:textSize="15sp" android:textColor="@color/text_primary" />
+                    <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                        android:src="@drawable/ic_chevron_right" android:tint="@color/text_hint" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="24dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

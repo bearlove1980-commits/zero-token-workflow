@@ -26,6 +26,7 @@ class BrowserActivity : AppCompatActivity() {
     private lateinit var btnMenu: ImageButton
     private lateinit var btnTabs: TextView
     private lateinit var btnHome: ImageButton
+    private lateinit var btnCommentRefresh: Button
 
     private var imagesEnabled = true
 
@@ -34,21 +35,24 @@ class BrowserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_browser)
 
-        webView     = findViewById(R.id.webView)
-        urlBar      = findViewById(R.id.urlBar)
-        progressBar = findViewById(R.id.progressBar)
-        tvSiteTitle = findViewById(R.id.tvSiteTitle)
-        btnBack     = findViewById(R.id.btnBack)
-        btnForward  = findViewById(R.id.btnForward)
-        btnMenu     = findViewById(R.id.btnMenu)
-        btnTabs     = findViewById(R.id.btnTabs)
-        btnHome     = findViewById(R.id.btnHome)
+        webView            = findViewById(R.id.webView)
+        urlBar             = findViewById(R.id.urlBar)
+        progressBar        = findViewById(R.id.progressBar)
+        tvSiteTitle        = findViewById(R.id.tvSiteTitle)
+        btnBack            = findViewById(R.id.btnBack)
+        btnForward         = findViewById(R.id.btnForward)
+        btnMenu            = findViewById(R.id.btnMenu)
+        btnTabs            = findViewById(R.id.btnTabs)
+        btnHome            = findViewById(R.id.btnHome)
+        btnCommentRefresh  = findViewById(R.id.btnCommentRefresh)
 
         imagesEnabled = PrefsManager.isImagesEnabled(this)
 
         setupWebView()
         setupUrlBar()
         setupBottomBar()
+
+        btnCommentRefresh.setOnClickListener { refreshYahooComments() }
 
         val url = intent.getStringExtra("url") ?: "https://www.google.co.jp"
         webView.loadUrl(url)
@@ -83,25 +87,6 @@ class BrowserActivity : AppCompatActivity() {
         }
 
         webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(
-                view: WebView?,
-                request: WebResourceRequest?
-            ): Boolean {
-                val url = request?.url?.toString() ?: return false
-                val blocked = PrefsManager.matchNgSite(this@BrowserActivity, url)
-                if (blocked != null) {
-                    view?.loadData(
-                        "<html><body style='font-family:sans-serif;text-align:center;padding:60px;'>" +
-                        "<h2>&#x1F6AB; アクセスブロック</h2>" +
-                        "<p>NGサイト設定によりブロックされました</p>" +
-                        "<p style='color:#999;font-size:13px;'>$blocked</p></body></html>",
-                        "text/html", "utf-8"
-                    )
-                    return true
-                }
-                return false
-            }
-
             override fun shouldInterceptRequest(
                 view: WebView?,
                 request: WebResourceRequest?
@@ -123,6 +108,14 @@ class BrowserActivity : AppCompatActivity() {
                 btnBack.isEnabled    = webView.canGoBack()
                 btnForward.isEnabled = webView.canGoForward()
                 updateNavButtons()
+
+                // Yahooニュース記事ページならコメント全展開＋ボタン表示
+                if (isYahooNewsUrl(url)) {
+                    btnCommentRefresh.visibility = View.VISIBLE
+                    expandYahooComments()
+                } else {
+                    btnCommentRefresh.visibility = View.GONE
+                }
             }
         }
 
@@ -142,6 +135,78 @@ class BrowserActivity : AppCompatActivity() {
         }
     }
 
+    private fun isYahooNewsUrl(url: String?): Boolean {
+        val u = url ?: return false
+        return u.contains("news.yahoo.co.jp/articles") ||
+               u.contains("news.yahoo.co.jp/pickup")
+    }
+
+    /** コメントの「もっと見る」ボタンを自動クリックし続けてワンスクロール化 */
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun expandYahooComments() {
+        val js = """
+            (function() {
+                var clicked = 0;
+                var maxClicks = 30;
+                var keywords = ['もっと見る','さらに表示','コメントをもっと','すべて表示','コメントを見る','続きを読む'];
+                function clickMore() {
+                    if (clicked >= maxClicks) return;
+                    var els = document.querySelectorAll('button, [role="button"], a, span');
+                    els.forEach(function(el) {
+                        var txt = el.innerText || el.textContent || '';
+                        if (keywords.some(function(k){ return txt.trim().includes(k); })) {
+                            el.click();
+                            clicked++;
+                        }
+                    });
+                }
+                clickMore();
+                var t = setInterval(function() {
+                    clickMore();
+                    if (clicked >= maxClicks) clearInterval(t);
+                }, 800);
+            })();
+        """.trimIndent()
+        webView.evaluateJavascript(js, null)
+    }
+
+    /** コメント更新ボタン押下：最新コメントを取得して再展開 */
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun refreshYahooComments() {
+        Toast.makeText(this, getString(R.string.comment_refreshing), Toast.LENGTH_SHORT).show()
+        val js = """
+            (function() {
+                // 更新・再読み込みボタンを探してクリック
+                var keywords = ['更新','再読み込み','リロード','最新'];
+                var refreshed = false;
+                document.querySelectorAll('button, [role="button"]').forEach(function(btn) {
+                    var txt = btn.innerText || btn.textContent || '';
+                    if (!refreshed && keywords.some(function(k){ return txt.trim().includes(k); })) {
+                        btn.click();
+                        refreshed = true;
+                    }
+                });
+                // コメントエリアまでスクロール
+                var commentArea = document.querySelector('[class*="comment"],[id*="comment"],[class*="Comment"],[id*="Comment"]');
+                if (commentArea) commentArea.scrollIntoView({behavior:'smooth'});
+                // 「もっと見る」を再展開
+                var keywords2 = ['もっと見る','さらに表示','コメントをもっと','すべて表示'];
+                var count = 0;
+                var t = setInterval(function() {
+                    document.querySelectorAll('button, [role="button"], a, span').forEach(function(el) {
+                        var txt = el.innerText || el.textContent || '';
+                        if (keywords2.some(function(k){ return txt.trim().includes(k); })) {
+                            el.click();
+                        }
+                    });
+                    count++;
+                    if (count >= 8) clearInterval(t);
+                }, 700);
+            })();
+        """.trimIndent()
+        webView.evaluateJavascript(js, null)
+    }
+
     private fun isImageRequest(url: String): Boolean {
         val lower = url.lowercase().substringBefore("?")
         return lower.endsWith(".jpg")  || lower.endsWith(".jpeg") ||
@@ -157,23 +222,6 @@ class BrowserActivity : AppCompatActivity() {
             if (go) {
                 val input = urlBar.text.toString().trim()
                 if (input.isNotEmpty()) {
-                    val isUrl = input.startsWith("http://") || input.startsWith("https://") ||
-                                (input.contains(".") && !input.contains(" "))
-                    if (isUrl) {
-                        val ngSite = PrefsManager.matchNgSite(this, input)
-                        if (ngSite != null) {
-                            Toast.makeText(this, "NGサイト: $ngSite", Toast.LENGTH_SHORT).show()
-                            hideKeyboard()
-                            return@setOnEditorActionListener true
-                        }
-                    } else {
-                        val ngWord = PrefsManager.matchNgWord(this, input)
-                        if (ngWord != null) {
-                            Toast.makeText(this, "NGワード: $ngWord", Toast.LENGTH_SHORT).show()
-                            hideKeyboard()
-                            return@setOnEditorActionListener true
-                        }
-                    }
                     webView.loadUrl(resolveUrl(input))
                     hideKeyboard()
                 }
@@ -227,27 +275,22 @@ class BrowserActivity : AppCompatActivity() {
             sheet.dismiss()
         }
 
-        // ブックマーク
         view.findViewById<LinearLayout>(R.id.menuBookmarks).setOnClickListener {
             Toast.makeText(this, getString(R.string.bookmarks), Toast.LENGTH_SHORT).show()
             sheet.dismiss()
         }
-        // 履歴
         view.findViewById<LinearLayout>(R.id.menuHistory).setOnClickListener {
             Toast.makeText(this, getString(R.string.history), Toast.LENGTH_SHORT).show()
             sheet.dismiss()
         }
-        // ダウンロード
         view.findViewById<LinearLayout>(R.id.menuDownloads).setOnClickListener {
             Toast.makeText(this, getString(R.string.downloads), Toast.LENGTH_SHORT).show()
             sheet.dismiss()
         }
-        // ホームに追加
         view.findViewById<LinearLayout>(R.id.menuAddHome).setOnClickListener {
             Toast.makeText(this, getString(R.string.add_to_home), Toast.LENGTH_SHORT).show()
             sheet.dismiss()
         }
-        // 共有
         view.findViewById<LinearLayout>(R.id.menuShare).setOnClickListener {
             val sendIntent = Intent(Intent.ACTION_SEND).apply {
                 putExtra(Intent.EXTRA_TEXT, webView.url)
@@ -256,7 +299,6 @@ class BrowserActivity : AppCompatActivity() {
             startActivity(Intent.createChooser(sendIntent, getString(R.string.share)))
             sheet.dismiss()
         }
-        // 設定
         view.findViewById<LinearLayout>(R.id.menuSettings).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
             sheet.dismiss()

@@ -51,11 +51,6 @@
             android:exported="false"
             android:label="@string/settings" />
 
-        <activity
-            android:name=".NgFilterActivity"
-            android:exported="false"
-            android:label="@string/ng_filter" />
-
     </application>
 
 </manifest>

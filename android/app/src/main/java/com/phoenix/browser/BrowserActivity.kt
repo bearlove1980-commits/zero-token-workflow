@@ -89,9 +89,9 @@ class BrowserActivity : AppCompatActivity() {
             ): WebResourceResponse? {
                 if (!imagesEnabled) {
                     val url = request?.url?.toString() ?: ""
-                    if (isImageRequest(url, request)) {
+                    if (isImageRequest(url)) {
                         return WebResourceResponse("image/png", "utf-8",
-                            javaClass.getResourceAsStream("/empty.png"))
+                            java.io.ByteArrayInputStream(ByteArray(0)))
                     }
                 }
                 return super.shouldInterceptRequest(view, request)
@@ -123,15 +123,12 @@ class BrowserActivity : AppCompatActivity() {
         }
     }
 
-    private fun isImageRequest(url: String, req: WebResourceRequest?): Boolean {
-        val accept = req?.requestHeaders?.get("Accept") ?: ""
-        if (accept.contains("image/")) return true
-        val lower = url.lowercase()
+    private fun isImageRequest(url: String): Boolean {
+        val lower = url.lowercase().substringBefore("?")
         return lower.endsWith(".jpg")  || lower.endsWith(".jpeg") ||
                lower.endsWith(".png")  || lower.endsWith(".gif")  ||
                lower.endsWith(".webp") || lower.endsWith(".svg")  ||
-               lower.endsWith(".bmp")  || lower.endsWith(".ico")  ||
-               lower.contains("/image") || lower.contains("img.")
+               lower.endsWith(".bmp")  || lower.endsWith(".ico")
     }
 
     private fun setupUrlBar() {

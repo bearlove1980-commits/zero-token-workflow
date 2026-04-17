@@ -22,6 +22,19 @@ from spreadsheet_logger import log_workflow, set_web_app_url
 OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(exist_ok=True)
 
+_session_tokens_saved = 0
+
+
+def _print_token_stats(step: str, tokens_saved: int) -> None:
+    global _session_tokens_saved
+    _session_tokens_saved += tokens_saved
+    bar = "█" * min(tokens_saved // 200, 30)
+    print(f"\n{'─'*50}")
+    print(f"[進捗] {step}")
+    print(f"[節約トークン推定] 今回: ~{tokens_saved:,} / セッション計: ~{_session_tokens_saved:,}")
+    print(f"  {bar}")
+    print(f"{'─'*50}\n")
+
 
 async def cmd_analyze(args):
     sources = [s.strip() for s in args.sources.split(",") if s.strip()]
@@ -58,8 +71,10 @@ async def cmd_analyze(args):
         encoding="utf-8"
     )
 
+    tokens_saved = len(result["answer"]) // 4
     print(f"\n完了: {result_file}")
     print(result["answer"][:500])
+    _print_token_stats(f"analyze 完了 ({len(sources)}件のソース)", tokens_saved)
 
     log_workflow(
         command="analyze",
@@ -67,7 +82,7 @@ async def cmd_analyze(args):
         query=query,
         answer=result["answer"],
         notebook_url=result.get("notebook_url", ""),
-        tokens_saved=len(result["answer"]) // 4,
+        tokens_saved=tokens_saved,
     )
 
 
@@ -110,8 +125,10 @@ async def cmd_research(args):
 ## 実践メモ
 （ここに使用経験を追記）
 """
+    tokens_saved = len(result["answer"]) // 4
     save_skill(skill_name, skill_content, tags=[topic, "research"])
     print(f"スキル '{skill_name}' を保存しました")
+    _print_token_stats(f"research 完了 → スキル: {skill_name}", tokens_saved)
 
     log_workflow(
         command="research",
@@ -120,7 +137,7 @@ async def cmd_research(args):
         answer=result["answer"],
         skill_name=skill_name,
         tags=[topic, "research"],
-        tokens_saved=len(result["answer"]) // 4,
+        tokens_saved=tokens_saved,
     )
 
 

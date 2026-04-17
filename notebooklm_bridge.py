@@ -48,10 +48,26 @@ class NotebookLMBridge:
             await page.goto(self.NOTEBOOKLM_URL)
             await page.wait_for_load_state("networkidle")
 
-            new_btn = await page.wait_for_selector(
-                'button:has-text("新しいノートブック"), button:has-text("New notebook")',
-                timeout=10000
-            )
+            # NotebookLM のUIバリエーションに対応
+            new_btn = None
+            for selector in [
+                'button:has-text("新しいノートブック")',
+                'button:has-text("New notebook")',
+                'button:has-text("作成")',
+                'button:has-text("Create")',
+                '[aria-label*="new" i]',
+                '[data-testid*="new-notebook"]',
+            ]:
+                try:
+                    new_btn = await page.wait_for_selector(selector, timeout=3000)
+                    if new_btn:
+                        break
+                except Exception:
+                    continue
+
+            if not new_btn:
+                raise RuntimeError("「新しいノートブック」ボタンが見つかりません。ログイン状態を確認してください。")
+
             await new_btn.click()
             await page.wait_for_load_state("networkidle")
 
@@ -76,10 +92,22 @@ class NotebookLMBridge:
             await p.stop()
 
     async def _add_source(self, page, source):
-        add_btn = await page.wait_for_selector(
-            'button:has-text("ソースを追加"), button:has-text("Add source")',
-            timeout=5000
-        )
+        add_btn = None
+        for selector in [
+            'button:has-text("ソースを追加")',
+            'button:has-text("Add source")',
+            'button:has-text("追加")',
+            'button:has-text("Add")',
+            '[aria-label*="source" i]',
+        ]:
+            try:
+                add_btn = await page.wait_for_selector(selector, timeout=3000)
+                if add_btn:
+                    break
+            except Exception:
+                continue
+        if not add_btn:
+            raise RuntimeError("「ソースを追加」ボタンが見つかりません。")
         await add_btn.click()
         await asyncio.sleep(1)
 

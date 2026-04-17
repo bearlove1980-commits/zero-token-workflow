@@ -17,6 +17,7 @@ from datetime import datetime
 
 from session_memory import save_session, load_context, save_skill, print_context
 from notebooklm_bridge import NotebookLMBridge, NotebookLMBridgeMock
+from spreadsheet_logger import log_workflow, set_web_app_url
 
 OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -60,6 +61,15 @@ async def cmd_analyze(args):
     print(f"\n完了: {result_file}")
     print(result["answer"][:500])
 
+    log_workflow(
+        command="analyze",
+        sources=sources,
+        query=query,
+        answer=result["answer"],
+        notebook_url=result.get("notebook_url", ""),
+        tokens_saved=len(result["answer"]) // 4,
+    )
+
 
 async def cmd_research(args):
     topic = args.topic
@@ -102,6 +112,16 @@ async def cmd_research(args):
 """
     save_skill(skill_name, skill_content, tags=[topic, "research"])
     print(f"スキル '{skill_name}' を保存しました")
+
+    log_workflow(
+        command="research",
+        sources=urls,
+        query=query,
+        answer=result["answer"],
+        skill_name=skill_name,
+        tags=[topic, "research"],
+        tokens_saved=len(result["answer"]) // 4,
+    )
 
 
 def cmd_save_session(args):
@@ -151,6 +171,9 @@ def main():
     sub.add_parser("save-session")
     sub.add_parser("load-context")
 
+    p_setup_gas = sub.add_parser("setup-gas")
+    p_setup_gas.add_argument("--url", required=True, help="Google Apps Script ウェブアプリURL")
+
     args = parser.parse_args()
 
     if args.command == "analyze":
@@ -161,6 +184,8 @@ def main():
         cmd_save_session(args)
     elif args.command == "load-context":
         cmd_load_context(args)
+    elif args.command == "setup-gas":
+        set_web_app_url(args.url)
     else:
         parser.print_help()
 

@@ -1,30 +1,64 @@
-# Zero Token Research Workflow — Claude Code Instructions
+# Claude Code — プロジェクトルール
 
-## このプロジェクトの目的
-重い文書分析をNotebookLMに委ねることでClaudeのトークンを節約し、
-分析結果だけをClaudeが受け取って編集・構造化する効率的なワークフロー。
+## トークン節約ルール
 
-## ワークフロー構造
-[Claude Code] --指示だけ--> [NotebookLM] --Geminiが無料分析--> [Claude Code] --最小トークンで編集-->
+1. **CLAUDE.mdは500行以内**に保つ。長い資料は別ファイルに分けて、必要なときだけ読む。
+2. **文書が3件以上**あるときはNotebookLMに投げる。Claudeは直接読まない。
+3. **出力は簡潔に**。不要な説明・前置き・まとめは省く。
+4. **同じ内容を繰り返さない**。一度説明したことは「前述の通り」で済ませる。
+5. **サブエージェントを活用**してメインのコンテキストを節約する。重い調査はAgentに任せる。
+6. **セッション終了時**は `python workflow.py save-session` を必ず実行する。
+
+## 個人情報の保護ルール
+
+### 絶対に書いてはいけない情報
+以下の情報は、コード・設定ファイル・コメント・ログのどこにも書かない：
+
+- **名前**（本名・フルネーム）
+- **住所**（自宅・会社）
+- **電話番号**
+- **パスワード**（どんなサービスのものも）
+- **APIキー・シークレット**（OpenAI, Anthropic, AWS など全て）
+- **クレジットカード番号**
+
+### APIキーやパスワードの正しい書き方
+```
+# 悪い例（絶対やらない）
+API_KEY = "sk-abc123..."
+
+# 良い例（環境変数から読む）
+API_KEY = os.environ.get("API_KEY")
+```
+
+### GitHubにアップロードする前のチェック
+`git commit` や `git push` の前に必ず確認する：
+
+1. `.env` ファイルが `.gitignore` に入っているか確認する
+2. コード中に個人情報が含まれていないか確認する
+3. 上記の漏れを見つけたら、即座にユーザーに警告して作業を止める
+
+### .gitignore に必ず入れるもの
+```
+.env
+.env.local
+.env.*
+*.key
+*.pem
+secrets/
+```
 
 ## コマンド一覧
 
-### 文書分析を依頼する
-python workflow.py analyze --sources "paper.pdf,https://example.com,youtube_url"
+```bash
+# 文書分析をNotebookLMに依頼
+python workflow.py analyze --sources "paper.pdf,https://example.com"
 
-### Webリサーチ → スキル化
+# Webリサーチ → スキル保存
 python workflow.py research --topic "テーマ" --save-as-skill "skill_name"
 
-### セッション記憶を保存
+# セッション記憶を保存
 python workflow.py save-session
 
-### 前回の記憶を引き継ぐ
+# 前回の記憶を引き継ぐ
 python workflow.py load-context
-
-## Claudeへのルール
-
-1. 文書が3件以上あるときは必ずNotebookLMに投げる — 直接読まない
-2. 分析結果のみ受け取り、編集・整形だけ行う — トークン最小化
-3. セッション終了時は必ず save-session を実行する
-4. 新しいスキルを習得したら memory/skills/ に保存する
-5. NotebookLMへの入力はURL・PDF・YouTubeのみ — テキスト直貼り禁止
+```

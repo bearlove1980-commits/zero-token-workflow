@@ -20,13 +20,29 @@ const COLUMNS = [
   "節約トークン推定",     // L ← 追加
 ];
 
+function setupSheet(ss) {
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME);
+    sheet.appendRow(COLUMNS);
+    sheet.setFrozenRows(1);
+    sheet.setColumnWidth(1, 180);
+    sheet.setColumnWidth(4, 300);
+    sheet.setColumnWidth(6, 200);
+    sheet.setColumnWidth(7, 400);
+  }
+  return sheet;
+}
+
 function getOrCreateSpreadsheet() {
   const props = PropertiesService.getScriptProperties();
   const spreadsheetId = props.getProperty(SCRIPT_PROP_KEY);
 
   if (spreadsheetId) {
     try {
-      return SpreadsheetApp.openById(spreadsheetId);
+      const ss = SpreadsheetApp.openById(spreadsheetId);
+      setupSheet(ss);
+      return ss;
     } catch (e) {
       props.deleteProperty(SCRIPT_PROP_KEY);
     }
@@ -34,22 +50,43 @@ function getOrCreateSpreadsheet() {
 
   const ss = SpreadsheetApp.create("Zero Token Workflow Log");
   props.setProperty(SCRIPT_PROP_KEY, ss.getId());
-
-  const sheet = ss.getSheets()[0];
-  sheet.setName(SHEET_NAME);
-  sheet.appendRow(COLUMNS);
-  sheet.setFrozenRows(1);
-  sheet.setColumnWidth(1, 180);
-  sheet.setColumnWidth(4, 300);
-  sheet.setColumnWidth(6, 200);
-  sheet.setColumnWidth(7, 400);
-
+  setupSheet(ss);
   return ss;
 }
 
 function getLogSheet() {
   const ss = getOrCreateSpreadsheet();
   return ss.getSheetByName(SHEET_NAME) || ss.getSheets()[0];
+}
+
+// 保存先スプレッドシートを切り替える（Apps Script エディタで直接実行）
+// 引数を変更してから「実行」を押す
+function setSpreadsheetId() {
+  const newId = "1_wbeoE8Ks4x92fi1YFC77w75P4H3msygGu4IDImHr1o"; // ← 切り替え先IDをここに設定
+  PropertiesService.getScriptProperties().setProperty(SCRIPT_PROP_KEY, newId);
+  const ss = SpreadsheetApp.openById(newId);
+  setupSheet(ss);
+  Logger.log("保存先を切り替えました: " + ss.getUrl());
+}
+
+// 旧スプレッドシートのデータを新しい保存先に移行する（一度だけ実行）
+function migrateDataFromOldSpreadsheet() {
+  const sourceId = "1DpJDaaDWchJW2XyW-3qXqdwKN86NusrATzuu6pw3p-8"; // ← 移行元ID
+  const sourceSheet = SpreadsheetApp.openById(sourceId).getSheetByName(SHEET_NAME);
+  if (!sourceSheet) {
+    Logger.log('移行元シート "' + SHEET_NAME + '" が見つかりません');
+    return;
+  }
+  const rows = sourceSheet.getDataRange().getValues();
+  const dataRows = rows.slice(1); // ヘッダー行を除く
+  if (dataRows.length === 0) {
+    Logger.log("移行するデータがありません");
+    return;
+  }
+  const destSheet = getLogSheet();
+  destSheet.getRange(destSheet.getLastRow() + 1, 1, dataRows.length, dataRows[0].length)
+    .setValues(dataRows);
+  Logger.log(dataRows.length + " 行を移行しました");
 }
 
 function doPost(e) {

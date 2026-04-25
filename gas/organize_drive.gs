@@ -21,6 +21,15 @@ const DEFAULT_RESIDENT_DOC_ID = "1vryVBP5Jydf5dcI8Plys6DXQEpKlL6jbpVMdtpEkke8";
 const DEFAULT_CARE_FOLDER_NAME = "care";
 const UNITS = ["神立", "八雲", "瑞穂"];
 
+// 入所者のフルネーム以外の表記揺れ・別名 (ひらがな表記・居室名など)。
+// キーは利用者一覧Docに記載のフルネーム (空白の入り方も含めて完全一致で書く)。
+// 値はファイル名に含まれていたら同じ入所者と見なす文字列のリスト。
+// ※ 苗字だけのエイリアスは「同姓の入所者がいない」ときのみ追加すること (例: 岸さんが2人いるので "岸" は登録しない)。
+const ALIASES = {
+  "黒田 泰子": ["黒田", "くろだ", "うぐいす"],
+  "青木 利夫": ["あおき", "きじ"],
+};
+
 function getConfig_() {
   const props = PropertiesService.getScriptProperties();
   return {
@@ -108,10 +117,13 @@ function parseResidentList_() {
       skipped.push(line + " (未知ユニット: " + unit + ")");
       return;
     }
+    const normName = normalize_(name);
+    const aliasList = ALIASES[name] || [];
     residents.push({
       name: name,
       unit: unit,
-      normName: normalize_(name),
+      normName: normName,
+      normAliases: aliasList.map(normalize_).filter(a => a && a !== normName),
     });
   });
 
@@ -219,26 +231,41 @@ function planResidentFolderMoves_(careFolder, residents, ensured) {
 }
 
 function planLooseFileMoves_(careFolder, residents, ensured) {
-  // 長い名前優先で照合 (例: "山田" より "山田太郎" を先に当てる)
-  const sorted = residents.slice().sort((a, b) => b.normName.length - a.normName.length);
+  // 入所者名 + エイリアスをすべて (resident, key) ペアにし、長い順にソート。
+  // 「山田」より「山田太郎」を先に当てる、エイリアス「黒田」より本名「黒田 泰子」を先に当てる。
+  const keys = [];
+  residents.forEach(r => {
+    keys.push({ resident: r, key: r.normName });
+    (r.normAliases || []).forEach(a => keys.push({ resident: r, key: a }));
+  });
+  keys.sort((a, b) => b.key.length - a.key.length);
+
   const moves = [];
   const it = careFolder.getFiles();
   while (it.hasNext()) {
     const f = it.next();
     const name = f.getName();
     const norm = normalize_(name);
-    const matches = sorted.filter(r => norm.indexOf(r.normName) !== -1);
-    if (matches.length === 0) {
+    const hits = keys.filter(k => norm.indexOf(k.key) !== -1);
+    if (hits.length === 0) {
       moves.push({ kind: "unmatched_file", file: f, fileName: name });
-    } else if (matches.length > 1 && matches[0].normName.length === matches[1].normName.length) {
-      // 最長一致が複数 = 真の曖昧
-      moves.push({ kind: "ambiguous_file", file: f, fileName: name, candidates: matches });
+      continue;
+    }
+    // 最長一致と同じ長さのヒットのみ採用 (短い別名で誤検出するのを防ぐ)
+    const topLen = hits[0].key.length;
+    const topResidents = {};
+    hits.forEach(h => {
+      if (h.key.length === topLen) topResidents[h.resident.normName] = h.resident;
+    });
+    const tops = Object.keys(topResidents).map(k => topResidents[k]);
+    if (tops.length > 1) {
+      moves.push({ kind: "ambiguous_file", file: f, fileName: name, candidates: tops });
     } else {
       moves.push({
         kind: "file_move",
         file: f,
         fileName: name,
-        resident: matches[0],
+        resident: tops[0],
       });
     }
   }
